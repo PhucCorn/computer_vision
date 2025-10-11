@@ -9,11 +9,19 @@ cap = cv2.VideoCapture(0)
 def get_dominant_color_name(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h, s, v = cv2.split(hsv)
-    hist = cv2.calcHist([h], [0], None, [180], [0, 180])
-    dominant_hue = np.argmax(hist)
+    hue_hist = cv2.calcHist([h], [0], None, [180], [0, 180])
+    dominant_hue = np.argmax(hue_hist)
+    saturation_hist = cv2.calcHist([s], [0], None, [255], [0, 255])
+    dominant_saturation = np.argmax(saturation_hist)
+    value_hist = cv2.calcHist([v], [0], None, [255], [0, 255])
+    dominant_value = np.argmax(value_hist)
 
     # Xác định tên màu dựa trên giá trị hue
-    if 0 <= dominant_hue < 10 or 160 <= dominant_hue <= 180:
+    if dominant_value < 10:
+        return "Đen"
+    elif dominant_saturation < 30 and dominant_value > 200:
+        return "Trắng"
+    elif 0 <= dominant_hue < 10 or 160 <= dominant_hue <= 180:
         return "Đỏ"
     elif 10 <= dominant_hue < 25:
         return "Cam"
@@ -62,13 +70,9 @@ while True:
         # Crop vùng áo
         shirt_crop = frame[shirt_y1:shirt_y2, shirt_x1:shirt_x2]
         if shirt_crop.size > 0:
-            print("Size áo của cổ: ", shirt_crop.size)
-            cv2.imshow('Shirt Crop', shirt_crop)
+            # cv2.imshow('Shirt Crop', shirt_crop)
             color_name = get_dominant_color_name(shirt_crop)
-            print(color_name)
             print(f"Màu chủ đạo của áo: {color_name}")
-            break
-        break
 
     cv2.imshow('Webcam', frame)
     if cv2.waitKey(1) == 27:  # Nhấn 'Esc' để thoát
