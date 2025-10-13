@@ -56,8 +56,8 @@ while True:
         # Xác định vùng áo dưới khuôn mặt
         shirt_x1 = x - int(0.15 * w)
         shirt_x2 = x + w + int(0.15 * w)
-        shirt_y1 = y + h
-        shirt_y2 = y + h + int(1.2 * h)
+        shirt_y1 = y + int(h*1.5)
+        shirt_y2 = y + int(h*1.5) + int(1.2 * h)
 
         # Đảm bảo không vượt quá khung hình
         shirt_x1 = max(shirt_x1, 0)
